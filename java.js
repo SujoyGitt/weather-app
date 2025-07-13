@@ -171,3 +171,43 @@ get7DayForecast();
 
 
 
+// 🎤 Voice Search Setup
+const voiceBtn = document.getElementById("voiceSearch");
+const listeningMsg = document.getElementById("listeningMsg");
+
+const SpeechRecognition =
+  window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if (SpeechRecognition) {
+  const recognition = new SpeechRecognition();
+  recognition.lang = "en-US";
+  recognition.interimResults = false;
+
+  voiceBtn.addEventListener("click", () => {
+    recognition.start();
+    voiceBtn.classList.add("listening-glow"); // Glow add
+    listeningMsg.classList.remove("hidden"); // Show text
+  });
+
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    weather_search.value = transcript;
+    getWeatherData(transcript);
+
+    // Reset UI after done
+    voiceBtn.classList.remove("listening-glow");
+    listeningMsg.classList.add("hidden");
+  };
+
+  recognition.onerror = (event) => {
+    alert("❌ Voice search error: " + event.error);
+    voiceBtn.classList.remove("listening-glow");
+    listeningMsg.classList.add("hidden");
+  };
+
+  recognition.onend = () => {
+    // Backup: ensure UI resets if stopped manually
+    voiceBtn.classList.remove("listening-glow");
+    listeningMsg.classList.add("hidden");
+  };
+}
