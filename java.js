@@ -25,6 +25,7 @@ let sunset = getElement(".sunset");
 const apiKey = "e6e0f31a4a5fa27ddf8ef856d26902f8";
 let currentUnit = "metric"; // default is Celsius
 
+// get weather data function
 const getWeatherData = async (city = "Barddhamān") => {
   const api = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=${currentUnit}`;
 
@@ -37,16 +38,7 @@ const getWeatherData = async (city = "Barddhamān") => {
     }
 
     // Destructure needed info including coordinates
-    const {
-      main,
-      name,
-      weather,
-      wind: windData,
-      sys,
-      dt,
-      clouds,
-      coord,
-    } = data;
+    const {  main,  name,  weather,  wind: windData,  sys,  dt,  clouds,  coord,} = data;
 
     // Update UI for current weather (your existing code)
     city_name.innerText = `${name}, ${getCountryName(sys.country)}`;
@@ -55,9 +47,7 @@ const getWeatherData = async (city = "Barddhamān") => {
     const iconCode = weather[0].icon;
     weatherIcon.innerHTML = `<img class='mx-auto w-20 h-20' src="https://openweathermap.org/img/wn/${iconCode}@2x.png" alt="Weather icon">`;
     degree.innerText = Math.round(main.temp);
-    minMax.innerText = `Min: ${Math.round(main.temp_min)}° / Max: ${Math.round(
-      main.temp_max
-    )}°`;
+    minMax.innerText = `Min: ${Math.round(main.temp_min)}° / Max: ${Math.round(main.temp_max )}°`;
     feelsLike.innerText = `${Math.round(main.feels_like)}°`;
     humidity.innerText = `${main.humidity}%`;
     wind.innerText = `${windData.speed} m/s`;
@@ -77,7 +67,6 @@ const getWeatherData = async (city = "Barddhamān") => {
 
   } catch (error) {
     console.error("Error fetching weather data:", error);
-
     // Reset UI on error (your existing code)
     city_name.innerText = "❌ City is not found";
     date.innerText = "";
