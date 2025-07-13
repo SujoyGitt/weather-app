@@ -1,8 +1,5 @@
 let getElement = (elem) => document.querySelector(elem);
 
-// Load saved theme
-let userTheme = localStorage.getItem("weather_theme") || "auto";
-
 // Basic UI elements
 let weather_search = getElement(".weather_search");
 let city_name = getElement(".city_name");
@@ -299,9 +296,15 @@ function renderSearchHistory() {
     container.appendChild(li);
   });
 }
+// Load saved theme
+let userTheme = localStorage.getItem("weather_theme");
+
+if (!userTheme) {
+  userTheme = "dark"; // Default to dark on first load
+  localStorage.setItem("weather_theme", userTheme);
+}
 
 // Theme Toggle & Auto Weather
-
 const themeToggle = document.getElementById("themeToggle");
 const body = document.body;
 
@@ -312,20 +315,29 @@ applyTheme(userTheme);
 themeToggle.addEventListener("click", () => {
   if (userTheme === "light") {
     userTheme = "dark";
-  } else if (userTheme === "dark") {
-    userTheme = "light"; 
+  } else {
+    userTheme = "light";
   }
-  console.log(userTheme)
   localStorage.setItem("weather_theme", userTheme);
   applyTheme(userTheme);
 });
 
 function applyTheme(mode, weather = null) {
   // Remove all theme color classes only (no layout classes)
-  body.classList.remove( "from-gray-900", "via-gray-800", "to-black", "from-yellow-200", "to-yellow-500", "from-gray-500", "to-gray-800", "from-blue-800", "to-gray-900", "from-blue-100", "to-white", "from-purple-800");
+  body.classList.remove(
+    "from-gray-900", "via-gray-800", "to-black",
+    "from-yellow-200", "to-yellow-500",
+    "from-gray-500", "to-gray-800",
+    "from-blue-800", "to-gray-900",
+    "from-blue-100", "to-blue-300",
+    "from-purple-800"
+  );
 
-  // Add base layout & gradient container classes
-  body.classList.add( "bg-gradient-to-br", "min-h-screen", "flex", "items-center", "justify-center", "font-sans", "px-4", "py-8", "lg:py-0");
+  // Base layout
+  body.classList.add(
+    "bg-gradient-to-br", "min-h-screen", "flex",
+    "items-center", "justify-center", "font-sans", "px-4", "py-8", "lg:py-0"
+  );
 
   // Reset text color
   body.classList.remove("text-black", "text-white");
@@ -335,6 +347,7 @@ function applyTheme(mode, weather = null) {
       : "text-white"
   );
 
+  // Apply theme-specific background
   if (mode === "light") {
     body.classList.add("from-blue-100", "to-blue-300");
     themeToggle.innerText = "🌞";
@@ -343,7 +356,6 @@ function applyTheme(mode, weather = null) {
     themeToggle.innerText = "🌙";
   } else if (mode === "auto" && weather) {
     themeToggle.innerText = "🎨";
-    body.classList.add("bg-gradient-to-br","from-gray-900","via-gray-800","to-black");
+    body.classList.add("from-gray-900", "via-gray-800", "to-black");
   }
 }
-
