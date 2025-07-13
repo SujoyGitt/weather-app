@@ -19,7 +19,7 @@ let cloudiness = getElement(".cloudiness");
 let sunrise = getElement(".sunrise");
 let sunset = getElement(".sunset");
 
-const apiKey = process.env.OPENWEATHER_API_KEY;
+const apiKey = 'e6e0f31a4a5fa27ddf8ef856d26902f8';
 
 const getWeatherData = async (city = "Barddhamān") => {
   const api = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
@@ -29,7 +29,7 @@ const getWeatherData = async (city = "Barddhamān") => {
     const data = await res.json();
 
     if (data.cod !== 200) {
-      throw new Error(data.message);
+      throw new Error(data.message);    
     }
 
     // Destructure needed info including coordinates
@@ -168,3 +168,6 @@ function formatDate(dateStr) {
 
 // run after load
 get7DayForecast();
+
+
+
