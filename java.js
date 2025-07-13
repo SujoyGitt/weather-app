@@ -19,8 +19,10 @@ let cloudiness = getElement(".cloudiness");
 let sunrise = getElement(".sunrise");
 let sunset = getElement(".sunset");
 
+const apiKey = process.env.OPENWEATHER_API_KEY;
+
 const getWeatherData = async (city = "Barddhamān") => {
-  const api = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=e6e0f31a4a5fa27ddf8ef856d26902f8&units=metric`;
+  const api = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
 
   try {
     const res = await fetch(api);
