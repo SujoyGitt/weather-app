@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Beautiful App UI</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body
+    class="bg-gradient-to-br from-gray-900 via-gray-800 to-black min-h-screen flex items-center justify-center font-sans text-white px-4 py-8 lg:py-0"
+  >
+    <div
+      class="glass w-full max-w-5xl mx-auto p-6 rounded-2xl text-white text-center bg-black/40 shadow-xl"
+    >
+        <!-- Left Panel -->
+        <div class="w-full">
+          <!-- 🔍 Search, 🎤 Voice, 🌡️ Toggle -->
+          <div class="flex items-center gap-2 mb-6">
+            <!-- Search -->
+            <div class="relative w-full">
+              <input
+                type="text"
+                placeholder="Search your city..."
+                aria-label="Search City"
+                class="weather_search w-full pl-10 pr-4 py-2 rounded-lg bg-black/40 text-white placeholder-white focus:outline-none"
+              />
+              <svg
+                class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
+
+            <!-- Voice Search -->
+            <button
+              id="voiceSearch"
+              title="Voice Search"
+              class="bg-white/10 hover:bg-white/20 p-2 rounded-lg"
+            >
+              🎤
+            </button>
+
+            <!-- Unit Toggle -->
+            <button
+              id="unitToggle"
+              title="Switch to °F"
+              class="bg-white/10 hover:bg-white/20 px-3 py-2 rounded-lg text-sm"
+            >
+              °C
+            </button>
+          </div>
+
+          <!-- City and Date -->
+          <h2 class="text-xl font-semibold city_name">Barddhaman, India</h2>
+          <p class="text-sm date">Friday, July 11, 2025 at 1:45 PM</p>
+
+          <!-- Weather Condition -->
+          <p
+            class="mt-2 inline-block px-4 py-1 bg-white/20 text-sm rounded-full weather_btn"
+          >
+            Clouds
+          </p>
+
+          <!-- Main Temperature -->
+          <div class="my-4">
+            <div class="weather_icon mb-2">
+              <img
+                src="https://openweathermap.org/img/wn/04d@2x.png"
+                alt="Weather icon"
+                class="mx-auto w-20 h-20"
+              />
+            </div>
+            <h1 class="text-5xl font-bold degree"><span>--</span>°</h1>
+            <div class="flex justify-center gap-4 text-sm mt-1 min_max">
+              <span>Min: --°</span>
+              <span>Max: --°</span>
+            </div>
+          </div>
+
+          <!-- Weather Details -->
+          <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mt-6 text-sm text-left">
+            <div class="bg-white/10 p-3 rounded-lg text-center">
+              <p class="font-medium">🌡️ Feels like</p>
+              <p class="feels_like">--</p>
+            </div>
+            <div class="bg-white/10 p-3 rounded-lg text-center">
+              <p class="font-medium">💧 Humidity</p>
+              <p class="humidity">--%</p>
+            </div>
+            <div class="bg-white/10 p-3 rounded-lg text-center">
+              <p class="font-medium">🌬️ Wind Speed</p>
+              <p class="wind">--</p>
+            </div>
+            <div class="bg-white/10 p-3 rounded-lg text-center">
+              <p class="font-medium">🧭 Wind Direction</p>
+              <p class="wind_dir">--</p>
+            </div>
+            <div class="bg-white/10 p-3 rounded-lg text-center">
+              <p class="font-medium">📈 Pressure</p>
+              <p class="pressure">-- hPa</p>
+            </div>
+            <div class="bg-white/10 p-3 rounded-lg text-center">
+              <p class="font-medium">🌊 Sea Level</p>
+              <p class="sea_level">-- hPa</p>
+            </div>
+            <div class="bg-white/10 p-3 rounded-lg text-center">
+              <p class="font-medium">🏔 Ground Level</p>
+              <p class="ground_level">-- hPa</p>
+            </div>
+            <div class="bg-white/10 p-3 rounded-lg text-center">
+              <p class="font-medium">☁️ Cloudiness</p>
+              <p class="cloudiness">--%</p>
+            </div>
+            <div class="bg-white/10 p-3 rounded-lg text-center">
+              <p class="font-medium">🌅 Sunrise</p>
+              <p class="sunrise">--</p>
+            </div>
+            <div class="bg-white/10 p-3 rounded-lg text-center">
+              <p class="font-medium">🌇 Sunset</p>
+              <p class="sunset">--</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Panel - Forecast -->
+        <div class="w-full mt-8">
+          <h3 class="text-lg font-semibold mb-2 text-left">
+            📆 Weekly Forecast
+          </h3>
+          <div id="weeklyForecast" class="grid grid-cols-2 lg:grid-cols-7 gap-4 text-sm"></div>
+        </div>
+      
+
+      <!-- Loading State -->
+      <div id="loading" class="mt-4 text-sm text-gray-300 hidden">
+        ⏳ Fetching weather data...
+      </div>
+
+      <!-- Search History -->
+      <div class="mt-6 text-left">
+        <p class="text-xs font-semibold mb-2">🔎 Recent Searches</p>
+        <ul id="searchHistory" class="text-sm space-y-1"></ul>
+      </div>
+    </div>
+
+    <script src="java.js"></script>
+  </body>
+</html>
