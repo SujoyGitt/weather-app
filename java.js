@@ -18,7 +18,7 @@ let groundLevel = getElement(".ground_level");
 let cloudiness = getElement(".cloudiness");
 let sunrise = getElement(".sunrise");
 let sunset = getElement(".sunset");
-
+let currentCity = "Barddhaman";
 const apiKey = "e6e0f31a4a5fa27ddf8ef856d26902f8";
 let currentUnit = "metric"; // default is Celsius
 
@@ -58,7 +58,7 @@ const getWeatherData = async (city = "Barddhamān") => {
 
     // **Call 7-day forecast with new coordinates**
     get7DayForecast(coord.lat, coord.lon);
-
+    currentCity = name;
     // save to search history in localstorage fuction
     updateSearchHistory(name);
 
@@ -225,8 +225,8 @@ unitToggle.addEventListener("click", () => {
   unitToggle.innerText = currentUnit === "metric" ? "°C" : "°F";
   unitToggle.title = currentUnit === "metric" ? "Switch to °F" : "Switch to °C";
 
-  // Re-fetch with current city and new unit
-  getWeatherData("Barddhaman");
+  // Re-fetch using the last searched city
+  getWeatherData(currentCity);
 });
 
 // recent search functionality start
