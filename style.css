@@ -11,6 +11,7 @@
   border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
+/* for record animation */
 .listening-glow {
   box-shadow: 0 0 15px 4px rgba(0, 255, 200, 0.7);
   animation: pulse 1s infinite;

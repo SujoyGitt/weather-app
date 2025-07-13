@@ -275,8 +275,7 @@ function renderSearchHistory() {
 
     // Left side: icon + city name
     const cityBtn = document.createElement("span");
-    cityBtn.className =
-      "flex items-center gap-2 cursor-pointer hover:underline";
+    cityBtn.className = "flex items-center gap-2 cursor-pointer hover:underline";
     cityBtn.innerHTML = `🔍 <span>${city}</span>`;
     cityBtn.addEventListener("click", () => {
       weather_search.value = city;
@@ -316,34 +315,17 @@ themeToggle.addEventListener("click", () => {
   } else if (userTheme === "dark") {
     userTheme = "light"; // stop cycling to "auto"
   }
-
+  console.log(userTheme)
   localStorage.setItem("weather_theme", userTheme);
   applyTheme(userTheme);
 });
 
 function applyTheme(mode, weather = null) {
   // Remove all theme color classes only (no layout classes)
-  body.classList.remove(
-    "from-gray-900", "via-gray-800", "to-black",
-    "from-yellow-200", "to-yellow-500",
-    "from-gray-500", "to-gray-800",
-    "from-blue-800", "to-gray-900",
-    "from-blue-100", "to-white",
-    "from-purple-800"
-  );
+  body.classList.remove( "from-gray-900", "via-gray-800", "to-black", "from-yellow-200", "to-yellow-500", "from-gray-500", "to-gray-800", "from-blue-800", "to-gray-900", "from-blue-100", "to-white", "from-purple-800");
 
   // Add base layout & gradient container classes
-  body.classList.add(
-    "bg-gradient-to-br",
-    "min-h-screen",
-    "flex",
-    "items-center",
-    "justify-center",
-    "font-sans",
-    "px-4",
-    "py-8",
-    "lg:py-0"
-  );
+  body.classList.add( "bg-gradient-to-br", "min-h-screen", "flex", "items-center", "justify-center", "font-sans", "px-4", "py-8", "lg:py-0");
 
   // Reset text color
   body.classList.remove("text-black", "text-white");
