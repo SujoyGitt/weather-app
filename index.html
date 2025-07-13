@@ -26,7 +26,7 @@
         </p>
 
         <!-- 🔍 Search, 🎤 Voice, 🌡️ Toggle -->
-        <div class="flex items-center gap-2 mb-6">
+        <div class="flex items-center  gap-2 mb-6">
           <!-- Search -->
           <div class="relative w-full">
             <input
@@ -54,7 +54,7 @@
           <button
             id="voiceSearch"
             title="Voice Search"
-            class="bg-white/10 hover:bg-white/20 p-2 rounded-lg"
+            class="bg-white/10 hover:bg-white/20 p-2  rounded-lg"
           >
             🎤
           </button>
@@ -63,9 +63,17 @@
           <button
             id="unitToggle"
             title="Switch to °F"
-            class="bg-white/10 hover:bg-white/20 px-3 py-2 rounded-lg text-sm"
+            class="bg-white/10 hover:bg-white/20 px-3  py-2 rounded-lg text-sm"
           >
             °C
+          </button>
+          <!-- Theme Toggle -->
+          <button
+            id="themeToggle"
+            title="Toggle Theme"
+            class="bg-white/10 hover:bg-white/20 px-  py-2 rounded-lg text-sm"
+          >
+            🌙
           </button>
         </div>
 
@@ -164,6 +172,12 @@
       </div>
     </div>
 
+    <!-- Google Places API - Replace YOUR_GOOGLE_API_KEY -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCo9YSIxSgGJqUz9pCaC5CFIkVCqSQ9MkA&libraries=places&callback=initAutocomplete"
+      async
+      defer
+    ></script>
     <script src="java.js"></script>
   </body>
 </html>

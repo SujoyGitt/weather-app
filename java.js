@@ -1,5 +1,8 @@
 let getElement = (elem) => document.querySelector(elem);
 
+// Load saved theme
+let userTheme = localStorage.getItem("weather_theme") || "auto";
+
 // Basic UI elements
 let weather_search = getElement(".weather_search");
 let city_name = getElement(".city_name");
@@ -19,21 +22,31 @@ let cloudiness = getElement(".cloudiness");
 let sunrise = getElement(".sunrise");
 let sunset = getElement(".sunset");
 
-const apiKey = 'e6e0f31a4a5fa27ddf8ef856d26902f8';
+const apiKey = "e6e0f31a4a5fa27ddf8ef856d26902f8";
+let currentUnit = "metric"; // default is Celsius
 
 const getWeatherData = async (city = "Barddhamān") => {
-  const api = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+  const api = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=${currentUnit}`;
 
   try {
     const res = await fetch(api);
     const data = await res.json();
 
     if (data.cod !== 200) {
-      throw new Error(data.message);    
+      throw new Error(data.message);
     }
 
     // Destructure needed info including coordinates
-    const { main, name, weather, wind: windData, sys, dt, clouds, coord } = data;
+    const {
+      main,
+      name,
+      weather,
+      wind: windData,
+      sys,
+      dt,
+      clouds,
+      coord,
+    } = data;
 
     // Update UI for current weather (your existing code)
     city_name.innerText = `${name}, ${getCountryName(sys.country)}`;
@@ -42,7 +55,9 @@ const getWeatherData = async (city = "Barddhamān") => {
     const iconCode = weather[0].icon;
     weatherIcon.innerHTML = `<img class='mx-auto w-20 h-20' src="https://openweathermap.org/img/wn/${iconCode}@2x.png" alt="Weather icon">`;
     degree.innerText = Math.round(main.temp);
-    minMax.innerText = `Min: ${Math.round(main.temp_min)}° / Max: ${Math.round(main.temp_max)}°`;
+    minMax.innerText = `Min: ${Math.round(main.temp_min)}° / Max: ${Math.round(
+      main.temp_max
+    )}°`;
     feelsLike.innerText = `${Math.round(main.feels_like)}°`;
     humidity.innerText = `${main.humidity}%`;
     wind.innerText = `${windData.speed} m/s`;
@@ -56,6 +71,9 @@ const getWeatherData = async (city = "Barddhamān") => {
 
     // **Call 7-day forecast with new coordinates**
     get7DayForecast(coord.lat, coord.lon);
+
+    // save to search history in localstorage fuction
+    updateSearchHistory(name);
 
   } catch (error) {
     console.error("Error fetching weather data:", error);
@@ -82,8 +100,6 @@ const getWeatherData = async (city = "Barddhamān") => {
     document.getElementById("weeklyForecast").innerHTML = "";
   }
 };
-
-
 
 function getCountryName(code) {
   const region = new Intl.DisplayNames(["en"], { type: "region" });
@@ -123,7 +139,10 @@ weather_search.addEventListener("input", (e) => {
 });
 
 // Run once DOM is fully loaded
-window.addEventListener("load", getWeatherData("barddhaman"));
+window.addEventListener("load", () => {
+  getWeatherData("barddhaman");
+  renderSearchHistory();
+});
 
 // get 7 days forecast
 async function get7DayForecast(lat = 23.2324, lon = 87.8615) {
@@ -169,8 +188,6 @@ function formatDate(dateStr) {
 // run after load
 get7DayForecast();
 
-
-
 // 🎤 Voice Search Setup
 const voiceBtn = document.getElementById("voiceSearch");
 const listeningMsg = document.getElementById("listeningMsg");
@@ -211,3 +228,150 @@ if (SpeechRecognition) {
     listeningMsg.classList.add("hidden");
   };
 }
+
+const unitToggle = document.getElementById("unitToggle");
+
+unitToggle.addEventListener("click", () => {
+  // Toggle the unit
+  currentUnit = currentUnit === "metric" ? "imperial" : "metric";
+
+  // Update button label
+  unitToggle.innerText = currentUnit === "metric" ? "°C" : "°F";
+  unitToggle.title = currentUnit === "metric" ? "Switch to °F" : "Switch to °C";
+
+  // Re-fetch with current city and new unit
+  getWeatherData("Barddhaman");
+});
+
+// recent search functionality start
+// LocalStorage key
+const SEARCH_HISTORY_KEY = "weather_search_history";
+
+// Load history from storage or start fresh
+let searchHistory = JSON.parse(localStorage.getItem(SEARCH_HISTORY_KEY)) || [];
+
+// Save and update history
+function updateSearchHistory(city) {
+  city = city.trim();
+
+  // Don't duplicate
+  const index = searchHistory.findIndex(
+    (c) => c.toLowerCase() === city.toLowerCase()
+  );
+  if (index !== -1) {
+    searchHistory.splice(index, 1); // remove old occurrence
+  }
+
+  searchHistory.unshift(city); // add to beginning
+  if (searchHistory.length > 5) searchHistory.pop(); // keep last 5
+
+  localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(searchHistory));
+  renderSearchHistory();
+}
+
+// Render to UI
+function renderSearchHistory() {
+  const container = document.getElementById("searchHistory");
+  container.innerHTML = "";
+
+  if (searchHistory.length === 0) {
+    container.innerHTML = "<li class='text-gray-400'>No recent searches</li>";
+    return;
+  }
+
+  searchHistory.forEach((city, index) => {
+    const li = document.createElement("li");
+    li.className =
+      "flex items-center justify-between bg-white/5 hover:bg-white/10 px-3 py-2 rounded";
+
+    // Left side: icon + city name
+    const cityBtn = document.createElement("span");
+    cityBtn.className =
+      "flex items-center gap-2 cursor-pointer hover:underline";
+    cityBtn.innerHTML = `🔍 <span>${city}</span>`;
+    cityBtn.addEventListener("click", () => {
+      weather_search.value = city;
+      getWeatherData(city);
+    });
+
+    // Right side: remove (❌)
+    const removeBtn = document.createElement("button");
+    removeBtn.className = "text-red-400 hover:text-red-600 text-sm";
+    removeBtn.innerText = "❌";
+    removeBtn.title = "Remove from history";
+    removeBtn.addEventListener("click", (e) => {
+      e.stopPropagation(); // prevent triggering the city click
+      searchHistory.splice(index, 1);
+      localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(searchHistory));
+      renderSearchHistory();
+    });
+
+    li.appendChild(cityBtn);
+    li.appendChild(removeBtn);
+    container.appendChild(li);
+  });
+}
+
+// Theme Toggle & Auto Weather
+
+const themeToggle = document.getElementById("themeToggle");
+const body = document.body;
+
+// Apply theme on load
+applyTheme(userTheme);
+
+// Manual toggle
+themeToggle.addEventListener("click", () => {
+  if (userTheme === "light") {
+    userTheme = "dark";
+  } else if (userTheme === "dark") {
+    userTheme = "light"; // stop cycling to "auto"
+  }
+
+  localStorage.setItem("weather_theme", userTheme);
+  applyTheme(userTheme);
+});
+
+function applyTheme(mode, weather = null) {
+  // Remove all theme color classes only (no layout classes)
+  body.classList.remove(
+    "from-gray-900", "via-gray-800", "to-black",
+    "from-yellow-200", "to-yellow-500",
+    "from-gray-500", "to-gray-800",
+    "from-blue-800", "to-gray-900",
+    "from-blue-100", "to-white",
+    "from-purple-800"
+  );
+
+  // Add base layout & gradient container classes
+  body.classList.add(
+    "bg-gradient-to-br",
+    "min-h-screen",
+    "flex",
+    "items-center",
+    "justify-center",
+    "font-sans",
+    "px-4",
+    "py-8",
+    "lg:py-0"
+  );
+
+  // Reset text color
+  body.classList.remove("text-black", "text-white");
+  body.classList.add(
+    mode === "light" || (weather && weather.toLowerCase() === "clear")
+      ? "text-black"
+      : "text-white"
+  );
+
+  if (mode === "light") {
+    body.classList.add("from-blue-100", "to-blue-300");
+    themeToggle.innerText = "🌞";
+  } else if (mode === "dark") {
+    body.classList.add("from-gray-900", "via-gray-800", "to-black");
+    themeToggle.innerText = "🌙";
+  } else if (mode === "auto" && weather) {
+    themeToggle.innerText = "🎨";
+  }
+}
+
