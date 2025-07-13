@@ -313,7 +313,7 @@ themeToggle.addEventListener("click", () => {
   if (userTheme === "light") {
     userTheme = "dark";
   } else if (userTheme === "dark") {
-    userTheme = "light"; // stop cycling to "auto"
+    userTheme = "light"; 
   }
   console.log(userTheme)
   localStorage.setItem("weather_theme", userTheme);
@@ -343,6 +343,7 @@ function applyTheme(mode, weather = null) {
     themeToggle.innerText = "🌙";
   } else if (mode === "auto" && weather) {
     themeToggle.innerText = "🎨";
+    body.classList.add("bg-gradient-to-br","from-gray-900","via-gray-800","to-black");
   }
 }
 
