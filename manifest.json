@@ -1,0 +1,21 @@
+{
+  "name": "Live Weather Forecast App",
+  "short_name": "WeatherApp",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#1f2937",
+  "description": "Track weather conditions and forecasts for cities around the globe.",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

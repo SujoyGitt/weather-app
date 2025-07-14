@@ -13,8 +13,8 @@
     <meta property="og:image" content="https://sujoygitt.github.io/weather-app/preview.png" />
     <meta property="og:url" content="https://sujoygitt.github.io/weather-app/" />
     <meta property="og:type" content="website" />
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-
+    <link rel="icon" href="./favicon.png" type="image/x-icon" />
+    <link rel="manifest" href="manifest.json" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -137,5 +137,16 @@
     </div>
 
     <script src="java.js"></script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker
+            .register("service-worker.js")
+            .then((reg) => console.log("✅ Service Worker Registered", reg))
+            .catch((err) => console.error("❌ SW registration failed:", err));
+        });
+      }
+  </script>
+
   </body>
 </html>
